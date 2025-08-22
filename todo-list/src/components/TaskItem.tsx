@@ -5,22 +5,23 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Task } from '../contexts/TaskContext'; // Keep SubTask import as it's used in Task's subTasks array
+import { Task } from '../contexts/TaskContext'; // Removed SubTask import as it's not directly used for type annotation in this file
 import { useTaskContext } from '../contexts/TaskContext';
 
 interface TaskItemProps {
   task: Task;
-  onEdit: (task: Task) => void; // Define the 'onEdit' prop explicitly
-  onToggleDone: (taskId: number, isDone: boolean) => void;
+  // Removed 'onEditTask' prop as it's not used directly here (openTaskDetailModal from context is used instead)
+  onToggleTaskDone: (taskId: number, isDone: boolean) => void;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }) => {
+// Removed 'onEditTask' from destructuring
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleTaskDone }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
   // Correctly destructure 'toggleSubTaskDone' (without 'on' prefix) from useTaskContext
   const { openTaskDetailModal, toggleSubTaskDone } = useTaskContext();
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onToggleDone(task.id, e.target.checked);
+    onToggleTaskDone(task.id, e.target.checked);
   };
 
   const handleEditClick = () => {
@@ -31,7 +32,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }
   const readableDate = task.dueDate;
 
   const handleSubTaskCheckboxChange = (subtaskId: number, isChecked: boolean) => {
-    // Call the correct function from context
+    // Using the correctly named function from context
     toggleSubTaskDone(task.id, subtaskId, isChecked);
   };
 
