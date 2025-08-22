@@ -4,7 +4,8 @@ FROM gradle:8.4-jdk17-alpine AS build
 WORKDIR /app
 
 # --- THIS IS THE LINE TO CHANGE ---
-COPY build.gradle settings.gradle.kts ./ 
+# Changed 'build.gradle' to 'build.gradle.kts'
+COPY build.gradle.kts settings.gradle.kts ./ 
 # --- END CHANGE ---
 
 COPY gradle ./gradle
