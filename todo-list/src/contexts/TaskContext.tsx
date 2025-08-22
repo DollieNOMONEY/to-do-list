@@ -1,3 +1,4 @@
+// src/contexts/TaskContext.tsx
 // This file sets up a React Context to manage the global state of your To-Do list.
 // It replaces the global variables (listOfTasks, selectedSection, etc.) and
 // provides functions to interact with your API.
@@ -5,8 +6,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-// import { generateUniqueId, formatDateToISO } from '../lib/utils'; // Assuming utilities are here
-import { formatDateToISO } from '../lib/utils'; // Assuming utilities are here
+import { generateUniqueId, formatDateToISO } from '../lib/utils'; // Assuming utilities are here
 import {
   fetchTasks,
   createTaskApi,
@@ -41,6 +41,8 @@ interface TaskContextType {
   tags: string[]; // List of all available tags
   selectedSection: string;
   setSelectedSection: (section: string) => void;
+  floating: string;
+  setFloating: (floating: string) => void;
   selectedDueDate: string;
   setSelectedDueDate: (date: string) => void;
   selectedTags: string[];
@@ -85,6 +87,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isTaskDetailModalOpen, setIsTaskDetailModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [floating, setFloating] = useState<string>('All'); // Added floating state
 
   // --- API Fetching ---
   const readTasks = useCallback(async () => {
@@ -103,13 +106,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setTags(Array.from(allTags));
 
       setTasks(fetchedTasks);
-    } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(`Failed to fetch tasks: ${err.message}`);
-        } else {
-          setError(`Failed to fetch tasks: An unknown error occurred.`);
-        }
-        console.error(err);
+    } catch (err: unknown) { // FIX: Changed 'any' to 'unknown'
+      if (err instanceof Error) { // FIX: Added type guard
+        setError(`Failed to fetch tasks: ${err.message}`);
+      } else {
+        setError(`Failed to fetch tasks: An unknown error occurred`);
+      }
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -131,7 +134,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: newTaskData.description || '',
         dueDate: newTaskData.dueDate || formatDateToISO(new Date()), // Use actual date
         isDone: newTaskData.isDone || false,
-        section: newTaskData.section || selectedSection !== 'All' ? selectedSection : 'Personal',
+        section: newTaskData.section || (selectedSection !== 'All' ? selectedSection : 'Personal'),
         tags: newTaskData.tags || [],
         subTasks: newSubTasks,
       };
@@ -139,11 +142,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const createdTask = await createTaskApi(newTask);
       setTasks(prev => [...prev, createdTask]); // Backend returns full task with IDs
       readTasks(); // Re-read to ensure consistency and update sections/tags list
-    } catch (err: unknown) {
-      if (err instanceof Error) {
+    } catch (err: unknown) { // FIX: Changed 'any' to 'unknown'
+      if (err instanceof Error) { // FIX: Added type guard
         setError(`Failed to add task: ${err.message}`);
       } else {
-        setError(`Failed to add task: An unknown error occurred.`);
+        setError(`Failed to add task: An unknown error occurred`);
       }
       console.error(err);
     }
@@ -168,11 +171,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         throw new Error("API update failed.");
       }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
+    } catch (err: unknown) { // FIX: Changed 'any' to 'unknown'
+      if (err instanceof Error) { // FIX: Added type guard
         setError(`Failed to update task: ${err.message}`);
       } else {
-        setError(`Failed to update task: An unknown error occurred.`);
+        setError(`Failed to update task: An unknown error occurred`);
       }
       console.error(err);
     }
@@ -184,11 +187,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setTasks(prev => prev.filter(task => task.id !== taskId));
       closeTaskDetailModal();
       readTasks(); // Re-read to ensure consistency and update sections/tags list
-    } catch (err: unknown) {
-      if (err instanceof Error) {
+    } catch (err: unknown) { // FIX: Changed 'any' to 'unknown'
+      if (err instanceof Error) { // FIX: Added type guard
         setError(`Failed to delete task: ${err.message}`);
       } else {
-        setError(`Failed to delete task: An unknown error occurred.`);
+        setError(`Failed to delete task: An unknown error occurred`);
       }
       console.error(err);
     }
@@ -388,6 +391,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     tags,
     selectedSection,
     setSelectedSection,
+    floating,
+    setFloating,
     selectedDueDate,
     setSelectedDueDate,
     selectedTags,

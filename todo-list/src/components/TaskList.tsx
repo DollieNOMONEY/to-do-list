@@ -10,14 +10,14 @@ import { TaskItem } from './TaskItem'; // Import individual TaskItem component
 
 interface TaskListProps {
   tasks: Task[]; // Now correctly declared as a prop
-  onEditTask: (task: Task) => void; // Type changed from 'any' to 'Task'
+  // Removed 'onEditTask' from here as TaskItem handles modal opening directly from context.
   onToggleTaskDone: (taskId: number, isDone: boolean) => void; // Changed to number
 }
 
-// Destructure 'onToggleTaskDone' to match the interface property name
-export const TaskList: React.FC<TaskListProps> = ({ tasks, onEditTask, onToggleTaskDone }) => {
-  // Removed `useTaskContext()` here as `tasks`, `onEditTask`, and `onToggleTaskDone`
-  // are now all passed in as props, making this component more reusable and less coupled.
+// Removed 'onEditTask' from destructuring here
+export const TaskList: React.FC<TaskListProps> = ({ tasks, onToggleTaskDone }) => {
+  // Removed `useTaskContext()` here as `tasks` is passed in as a prop,
+  // making this component more reusable and less coupled.
   // const { filteredTasks } = useTaskContext();
 
   return (
@@ -29,7 +29,7 @@ export const TaskList: React.FC<TaskListProps> = ({ tasks, onEditTask, onToggleT
           <TaskItem
             key={task.id}
             task={task}
-            // --- FIX: Removed onEditTask prop here as TaskItem handles modal opening internally ---
+            // Removed onEditTask prop here as TaskItem handles modal opening internally
             onToggleTaskDone={onToggleTaskDone} // Pass onToggleTaskDone to TaskItem
           />
         ))
