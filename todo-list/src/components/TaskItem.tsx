@@ -1,12 +1,12 @@
+// src/components/TaskItem.tsx
 // This component represents a single task in the list.
 // It consolidates logic from task_manager.js and check_manager.js for an individual task.
 
 'use client';
 
-import React, { useState } from 'react'; // Re-added useState
-import { Task } from '../contexts/TaskContext';
-// import { Task, SubTask } from '../contexts/TaskContext';
-import { useTaskContext } from '../contexts/TaskContext'; // Re-imported for openTaskDetailModal and onToggleSubTaskDone
+import React, { useState } from 'react';
+import { Task, SubTask } from '../contexts/TaskContext'; // <--- ADDED SubTask IMPORT
+import { useTaskContext } from '../contexts/TaskContext';
 
 interface TaskItemProps {
   task: Task;
@@ -14,24 +14,27 @@ interface TaskItemProps {
   onToggleDone: (taskId: number, isDone: boolean) => void;
 }
 
-// export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }) => {
-export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleDone }) => {
-  const [showExtraInfo, setShowExtraInfo] = useState(false); // Re-added state
-  const { openTaskDetailModal, onToggleSubTaskDone } = useTaskContext();
+// <--- Re-added 'onEdit' to destructuring here
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }) => {
+  const [showExtraInfo, setShowExtraInfo] = useState(false);
+  // <--- Changed 'onToggleSubTaskDone' to 'toggleSubTaskDone'
+  const { openTaskDetailModal, toggleSubTaskDone } = useTaskContext();
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onToggleDone(task.id, e.target.checked);
   };
 
   const handleEditClick = () => {
+    // onEdit(task); // <-- Original was using onEdit, but you changed the component's destructuring,
+                    // <-- and openTaskDetailModal is likely the intended replacement.
     openTaskDetailModal(task);
   };
 
-  // dueDate is now YYYY-MM-DD from backend
   const readableDate = task.dueDate;
 
   const handleSubTaskCheckboxChange = (subtaskId: number, isChecked: boolean) => {
-    onToggleSubTaskDone(task.id, subtaskId, isChecked);
+    // <--- Using the correctly named function from context
+    toggleSubTaskDone(task.id, subtaskId, isChecked);
   };
 
   return (
@@ -42,7 +45,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleDone }) => {
       id={`task_${task.id}`}
     >
       <div className="flex items-center gap-4">
-        <button // Re-added toggle button
+        <button
           onClick={() => setShowExtraInfo(!showExtraInfo)}
           className="toggle-list text-gray-600 hover:text-gray-900 transition-colors"
           data-toggled={showExtraInfo.toString()}
@@ -70,8 +73,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleDone }) => {
         </div>
       </div>
 
-      {showExtraInfo && ( // Conditional rendering based on showExtraInfo
-        <div className="container_task_extrainformation mt-4 pl-10 space-y-2 is-expanded"> {/* Added is-expanded */}
+      {showExtraInfo && (
+        <div className="container_task_extrainformation mt-4 pl-10 space-y-2 is-expanded">
           <p className="text-gray-600">
             <span className="font-semibold">Section:</span> {task.section}
           </p>
@@ -88,7 +91,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleDone }) => {
             </div>
           )}
           {task.subTasks && task.subTasks.length > 0 && (
-            <div className="full-width container_subtasks mt-4 space-y-2 is-expanded"> {/* Added is-expanded */}
+            <div className="full-width container_subtasks mt-4 space-y-2 is-expanded">
               <p className="font-semibold text-gray-700 mb-2">Subtasks:</p>
               {task.subTasks.map(subtask => (
                 <div key={subtask.id} className="flex items-center gap-2 text-gray-700">
