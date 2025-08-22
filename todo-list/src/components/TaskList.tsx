@@ -9,9 +9,8 @@ import { Task } from '../contexts/TaskContext'; // Import Task interface
 import { TaskItem } from './TaskItem'; // Import individual TaskItem component
 
 interface TaskListProps {
-  tasks: Task[]; // Now correctly declared as a prop
-  // --- FIX: Removed 'onEditTask' from TaskListProps as it's no longer passed to TaskItem ---
-  onToggleTaskDone: (taskId: number, isDone: boolean) => void; // Changed to number
+  tasks: Task[];
+  onToggleTaskDone: (taskId: number, isDone: boolean) => void;
 }
 
 // --- FIX: Removed 'onEditTask' from destructuring here ---

@@ -68,7 +68,9 @@ function MainTaskView() {
 
       <TaskList
         tasks={filteredTasks}
-        onEditTask={openTaskDetailModal} // Directly opens modal and sets task in context
+        // --- FIX: REMOVE THIS LINE ---
+        // onEditTask={openTaskDetailModal} // Directly opens modal and sets task in context
+        // --- END FIX ---
         onToggleTaskDone={toggleTaskDone}
       />
     </section>
