@@ -4,12 +4,12 @@
 'use client';
 
 import React from 'react';
-import { useTaskContext } from '../contexts/TaskContext'; // Import TaskContext
+import { useTaskContext, Task } from '../contexts/TaskContext'; // Import TaskContext
 import { TaskItem } from './TaskItem'; // Import individual TaskItem component
 
 interface TaskListProps {
   // tasks: Task[]; // Tasks are now pulled from context
-  onEditTask: (task: any) => void; // Function to trigger task editing/modal open
+  onEditTask: (task: Task) => void; // Function to trigger task editing/modal open
   onToggleTaskDone: (taskId: number, isDone: boolean) => void; // Changed to number
 }
 

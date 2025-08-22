@@ -5,7 +5,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { generateUniqueId, formatDateToISO } from '../lib/utils'; // Assuming utilities are here
+// import { generateUniqueId, formatDateToISO } from '../lib/utils'; // Assuming utilities are here
+import { formatDateToISO } from '../lib/utils'; // Assuming utilities are here
 import {
   fetchTasks,
   createTaskApi,
@@ -102,9 +103,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setTags(Array.from(allTags));
 
       setTasks(fetchedTasks);
-    } catch (err: any) {
-      setError(`Failed to fetch tasks: ${err.message || 'Unknown error'}`);
-      console.error(err);
+    } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(`Failed to fetch tasks: ${err.message}`);
+        } else {
+          setError(`Failed to fetch tasks: An unknown error occurred.`);
+        }
+        console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -134,8 +139,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const createdTask = await createTaskApi(newTask);
       setTasks(prev => [...prev, createdTask]); // Backend returns full task with IDs
       readTasks(); // Re-read to ensure consistency and update sections/tags list
-    } catch (err: any) {
-      setError(`Failed to add task: ${err.message || 'Unknown error'}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(`Failed to add task: ${err.message}`);
+      } else {
+        setError(`Failed to add task: An unknown error occurred.`);
+      }
       console.error(err);
     }
   };
@@ -159,8 +168,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         throw new Error("API update failed.");
       }
-    } catch (err: any) {
-      setError(`Failed to update task: ${err.message || 'Unknown error'}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(`Failed to update task: ${err.message}`);
+      } else {
+        setError(`Failed to update task: An unknown error occurred.`);
+      }
       console.error(err);
     }
   };
@@ -171,8 +184,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setTasks(prev => prev.filter(task => task.id !== taskId));
       closeTaskDetailModal();
       readTasks(); // Re-read to ensure consistency and update sections/tags list
-    } catch (err: any) {
-      setError(`Failed to delete task: ${err.message || 'Unknown error'}`);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(`Failed to delete task: ${err.message}`);
+      } else {
+        setError(`Failed to delete task: An unknown error occurred.`);
+      }
       console.error(err);
     }
   };

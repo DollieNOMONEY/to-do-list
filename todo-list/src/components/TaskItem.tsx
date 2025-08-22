@@ -4,7 +4,8 @@
 'use client';
 
 import React, { useState } from 'react'; // Re-added useState
-import { Task, SubTask } from '../contexts/TaskContext';
+import { Task } from '../contexts/TaskContext';
+// import { Task, SubTask } from '../contexts/TaskContext';
 import { useTaskContext } from '../contexts/TaskContext'; // Re-imported for openTaskDetailModal and onToggleSubTaskDone
 
 interface TaskItemProps {
@@ -13,7 +14,8 @@ interface TaskItemProps {
   onToggleDone: (taskId: number, isDone: boolean) => void;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }) => {
+// export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleDone }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false); // Re-added state
   const { openTaskDetailModal, onToggleSubTaskDone } = useTaskContext();
 

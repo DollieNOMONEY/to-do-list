@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react'
 
 interface Task {
   id: number,
-  task: string;
+  task: string; // Changed from taskName to task to match usage in the original snippet's render
   isDone: boolean;
   dueDate: string;
-  description: string; 
+  description: string;
 }
 
 export default function WindowTaskView() {
@@ -22,22 +22,29 @@ export default function WindowTaskView() {
         setLoading(true); // Set loading to true before fetching
         setError(null); // Clear any previous errors
 
+        // IMPORTANT: Replace this with the actual URL of your deployed Kotlin backend
+        // For example: 'https://your-kotlin-backend-name.onrender.com/api'
+        const API_BASE_URL = ''; // <-- Ensure this is set to your deployed backend URL
 
+        const request = await fetch(`${API_BASE_URL}/get-tasks`);
 
-        let request = await fetch("http://localhost:8080/api/get-tasks");
-        
         if (!request.ok) {
           throw new Error(`HTTP Error! Status: ${request.status}`)
         }
 
-        let result: Task[] = await request.json();
+        const result: Task[] = await request.json();
         setTasks(result);
         console.log(result);
-      }
-      catch(error: any) {
-        console.error("Error fetching tasks:", error.message)
-      }
-      finally {
+      } catch (error: unknown) { // Changed 'any' to 'unknown'
+        // Type guard to safely access error properties
+        if (error instanceof Error) {
+          console.error("Error fetching tasks:", error.message);
+          setError(error.message); // Set the error message for display
+        } else {
+          console.error("An unknown error occurred:", error);
+          setError("An unknown error occurred."); // Generic message for unknown error types
+        }
+      } finally {
         setLoading(false); // Set loading to false after fetch completes (whether success or error)
       }
     }
@@ -57,14 +64,14 @@ export default function WindowTaskView() {
         </div>
         <br/>
         <button type="button" id="btn_NewTask">Add New Task</button>
-        
+
         <div id="taskList" className="space-y-4">
         {loading && <p className="text-blue-600">Loading tasks...</p>}
         {error && <p className="text-red-600">Error: {error}</p>}
         {!loading && !error && tasks.length === 0 && (
           <p className="text-gray-500">No tasks found. Start by adding a new task!</p>
         )}
-        
+
         {/* Render the list of tasks */}
         {!loading && !error && tasks.length > 0 && (
           <ul className="list-none p-0 m-0">

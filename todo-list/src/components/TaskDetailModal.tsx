@@ -5,7 +5,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTaskContext, Task, SubTask } from '../contexts/TaskContext';
+// import { useTaskContext, Task, SubTask } from '../contexts/TaskContext';
+import { Task, SubTask } from '../contexts/TaskContext';
 // Removed getISOWeekDay as we are now strictly using YYYY-MM-DD for dueDate
 
 interface TaskDetailModalProps {
