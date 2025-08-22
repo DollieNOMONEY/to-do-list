@@ -5,7 +5,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Task, SubTask } from '../contexts/TaskContext'; // SubTask import is necessary and kept
+import { Task } from '../contexts/TaskContext'; // SubTask import is necessary and kept
 import { useTaskContext } from '../contexts/TaskContext';
 
 interface TaskItemProps {
