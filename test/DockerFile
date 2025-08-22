@@ -1,4 +1,3 @@
-# --- Stage 1: Build the application ---
 # Use an official Gradle image with JDK 17 as the build environment.
 # 'alpine' versions are smaller and more secure.
 FROM gradle:8.4-jdk17-alpine AS build
