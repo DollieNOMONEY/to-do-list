@@ -3,33 +3,33 @@
 
 'use client';
 
+'use client';
+
 import React from 'react';
-import { Task } from '../contexts/TaskContext'; // Import TaskContext and Task interface
+import { Task } from '../contexts/TaskContext'; // Import Task interface
 import { TaskItem } from './TaskItem'; // Import individual TaskItem component
 
 interface TaskListProps {
-  // tasks: Task[]; // Tasks are now pulled from context
-  tasks: Task[];
+  tasks: Task[]; // This prop is now correctly passed from app/page.tsx
   onEditTask: (task: Task) => void; // Function to trigger task editing/modal open
-  onToggleTaskDone: (taskId: number, isDone: boolean) => void; // Changed to number
+  onToggleTaskDone: (taskId: number, isDone: boolean) => void;
 }
 
-export const TaskList: React.FC<TaskListProps> = ({ tasks, onEditTask, onToggleTaskDone }) => { // Update destructuring here
-  // The useTaskContext is still used within MainTaskView, but for this component,
-  // we are explicitly passing 'tasks' as a prop.
-  // const { filteredTasks } = useTaskContext(); // This line is no longer strictly needed here if tasks are passed down
+export const TaskList: React.FC<TaskListProps> = ({ tasks, onEditTask, onToggleTaskDone }) => {
+  // We remove the useTaskContext() call here because `tasks` is received as a prop.
+  // const { filteredTasks } = useTaskContext(); 
 
   return (
-    <div className="space-y-4" id="taskList"> {/* Replaces taskList element */}
-      {tasks.length === 0 ? ( // Use 'tasks' prop here
+    <div className="space-y-4" id="taskList">
+      {tasks.length === 0 ? (
         <p className="text-gray-500 text-center">No tasks found for the current filters.</p>
       ) : (
-        tasks.map(task => ( // Use 'tasks' prop here
+        tasks.map(task => (
           <TaskItem
             key={task.id}
             task={task}
-            onEdit={onEditTask}
-            onToggleDone={onToggleTaskDone}
+            onEdit={onEditTask} // Pass onEditTask as 'onEdit' prop
+            onToggleDone={onToggleTaskDone} // Pass onToggleTaskDone as 'onToggleDone' prop
           />
         ))
       )}
