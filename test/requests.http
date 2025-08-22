@@ -1,0 +1,13 @@
+### Get a message with a path variable
+GET http://localhost:8080/api/getMessage/hello
+
+### Change a profile
+POST http://localhost:8080/api/changeProfile
+Content-Type: application/json
+
+{
+    "name": "Jane Doe",
+    "password": "anotherpassword",
+    "email": "jane.doe@example.com",
+    "gender": "F"
+}
