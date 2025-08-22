@@ -23,7 +23,7 @@ function MainTaskView() {
     isLoading,
     error,
     toggleTaskDone,
-    openTaskDetailModal,
+    // openTaskDetailModal,
   } = useTaskContext();
 
   // Adapted from user's WindowTaskView.tsx to use context data
