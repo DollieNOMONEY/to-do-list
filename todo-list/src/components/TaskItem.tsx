@@ -1,20 +1,19 @@
-// src/components/TaskItem.tsx
 // This component represents a single task in the list.
 // It consolidates logic from task_manager.js and check_manager.js for an individual task.
 
 'use client';
 
 import React, { useState } from 'react';
-import { Task } from '../contexts/TaskContext'; // Removed SubTask import as it's not directly used for type annotation in this file
+import { Task } from '../contexts/TaskContext'; // Removed SubTask import as it's not directly used here
 import { useTaskContext } from '../contexts/TaskContext';
 
 interface TaskItemProps {
   task: Task;
-  // Removed 'onEditTask' prop as it's not used directly here (openTaskDetailModal from context is used instead)
+  // --- FIX: Removed 'onEditTask' prop definition here as it's not used ---
   onToggleTaskDone: (taskId: number, isDone: boolean) => void;
 }
 
-// Removed 'onEditTask' from destructuring
+// --- FIX: Removed 'onEditTask' from destructuring here ---
 export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleTaskDone }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
   // Correctly destructure 'toggleSubTaskDone' (without 'on' prefix) from useTaskContext

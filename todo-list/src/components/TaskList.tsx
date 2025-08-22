@@ -29,7 +29,7 @@ export const TaskList: React.FC<TaskListProps> = ({ tasks, onEditTask, onToggleT
           <TaskItem
             key={task.id}
             task={task}
-            onEditTask={onEditTask} // Pass onEditTask to TaskItem
+            // --- FIX: Removed onEditTask prop here as TaskItem handles modal opening internally ---
             onToggleTaskDone={onToggleTaskDone} // Pass onToggleTaskDone to TaskItem
           />
         ))
