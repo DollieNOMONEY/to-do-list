@@ -1,15 +1,9 @@
 // src/contexts/TaskContext.tsx
 // This file sets up a React Context to manage the global state of your To-Do list.
-// It replaces the global variables (listOfTasks, selectedSection, etc.) and
-// provides functions to interact with your API.
-
-// src/contexts/TaskContext.tsx
-// This file sets up a React Context to manage the global state of your To-Do list.
 
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-// import { generateUniqueId, formatDateToISO } from '../lib/utils';
 import { formatDateToISO } from '../lib/utils';
 import {
   fetchTasks,
@@ -70,8 +64,8 @@ interface TaskContextType {
   isLoading: boolean;
   error: string | null;
   readTasks: () => Promise<void>;
-  floating: string; // Added floating state
-  setFloating: (floating: string) => void; // Added floating state setter
+  floating: string;
+  setFloating: (floating: string) => void;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -87,7 +81,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isTaskDetailModalOpen, setIsTaskDetailModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [floating, setFloating] = useState<string>('All'); // Initializing floating state
+  const [floating, setFloating] = useState<string>('All');
 
   const readTasks = useCallback(async () => {
     setIsLoading(true);
@@ -147,18 +141,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateTask = async (updatedTask: Task) => {
     try {
-      const taskForApi = {
-        ...updatedTask,
-        subTasks: updatedTask.subTasks.map(st => {
-          // --- FIX START ---
-          if (st.id === 0) { // If it's a new subtask (ID 0)
-            const { id, ...rest } = st; // Omit the 'id' property
-            return rest as SubTask; // Cast to SubTask, as 'id' is now optional for new subtasks sent to API
-          }
-          return st; // For existing subtasks, keep the ID
-          // --- FIX END ---
-        })
-      };
+      // --- FIX START ---
+      // The updatedTask object already correctly represents subtasks.
+      // New subtasks from the frontend will have id: 0.
+      // Existing subtasks will have their assigned IDs.
+      // We can directly send updatedTask to the API.
+      const taskForApi: Task = updatedTask;
+      // --- FIX END ---
 
       const result = await updateTaskApi(taskForApi);
       if (result) {
