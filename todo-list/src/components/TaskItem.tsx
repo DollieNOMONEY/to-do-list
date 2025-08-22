@@ -5,19 +5,19 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Task, SubTask } from '../contexts/TaskContext'; // <--- ADDED SubTask IMPORT
+import { Task } from '../contexts/TaskContext';
 import { useTaskContext } from '../contexts/TaskContext';
 
 interface TaskItemProps {
   task: Task;
-  onEdit: (task: Task) => void;
+  // onEdit: (task: Task) => void; // <-- Removed 'onEdit' from props
   onToggleDone: (taskId: number, isDone: boolean) => void;
 }
 
-// <--- Re-added 'onEdit' to destructuring here
-export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }) => {
+// <-- Removed 'onEdit' from destructuring here
+export const TaskItem: React.FC<TaskItemProps> = ({ task, onToggleDone }) => {
   const [showExtraInfo, setShowExtraInfo] = useState(false);
-  // <--- Changed 'onToggleSubTaskDone' to 'toggleSubTaskDone'
+  // Corrected context destructuring: 'toggleSubTaskDone' is the correct name from TaskContext
   const { openTaskDetailModal, toggleSubTaskDone } = useTaskContext();
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,15 +25,14 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, onEdit, onToggleDone }
   };
 
   const handleEditClick = () => {
-    // onEdit(task); // <-- Original was using onEdit, but you changed the component's destructuring,
-                    // <-- and openTaskDetailModal is likely the intended replacement.
+    // This now correctly uses the openTaskDetailModal from the context
     openTaskDetailModal(task);
   };
 
   const readableDate = task.dueDate;
 
   const handleSubTaskCheckboxChange = (subtaskId: number, isChecked: boolean) => {
-    // <--- Using the correctly named function from context
+    // Using the correctly named function from context
     toggleSubTaskDone(task.id, subtaskId, isChecked);
   };
 
